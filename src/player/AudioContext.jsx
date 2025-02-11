@@ -5,10 +5,11 @@ export const AudioProvider = ({ children }) => {
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playlist, setPlaylist] = useState([]);
-  const [isAudioPlayerVisible, setIsAudioPlayerVisible] = useState(false);
+  const [isAudioPlayerVisible, setIsAudioPlayerVisible] = useState(true);
   const audioRef = useRef(null);
 
   useEffect(() => {
+
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.play();
@@ -16,6 +17,7 @@ export const AudioProvider = ({ children }) => {
         audioRef.current.pause();
       }
     }
+    
   }, [isPlaying]);
 
 

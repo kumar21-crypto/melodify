@@ -27,39 +27,39 @@ const AudioPlayer = () => {
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
 
+
     useEffect(() => {
 
+        const updateCurrentTime = () => {
+            setCurrentTime(audioRef.current.currentTime);
+        };
+
+        const updateDuration = () => {
+            setDuration(audioRef.current.duration);
+        };
+
+        const handleSongEnd = () => {
+            handleNext();
+        };
+
         if (audioRef.current) {
-            const updateCurrentTime = () => {
-                setCurrentTime(audioRef.current.currentTime);
-            };
-
-            const updateDuration = () => {
-                setDuration(audioRef.current.duration);
-            };
-
-            const handleSongEnd = () => {
-                handleNext();
-            };
-
-            if (audioRef.current) {
-                audioRef.current.addEventListener('timeupdate', updateCurrentTime);
-                audioRef.current.addEventListener('loadedmetadata', updateDuration);
-                audioRef.current.addEventListener('ended', handleSongEnd);
-            }
-
-            return () => {
-                if (audioRef.current) {
-                    audioRef.current.removeEventListener('timeupdate', updateCurrentTime);
-                    audioRef.current.removeEventListener('loadedmetadata', updateDuration);
-                    audioRef.current.removeEventListener('ended', handleSongEnd);
-                }
-
-            };
+            audioRef.current.addEventListener('timeupdate', updateCurrentTime);
+            audioRef.current.addEventListener('loadedmetadata', updateDuration);
+            audioRef.current.addEventListener('ended', handleSongEnd);
         }
 
 
-    }, [audioRef]);
+
+        return () => {
+            if (audioRef.current) {
+                audioRef.current.removeEventListener('timeupdate', updateCurrentTime);
+                audioRef.current.removeEventListener('loadedmetadata', updateDuration);
+                audioRef.current.removeEventListener('ended', handleSongEnd);
+            }
+
+        };
+
+    }, [audioRef.current]);
 
     const handlePlayPause = () => {
         setIsPlaying(!isPlaying);
@@ -100,7 +100,7 @@ const AudioPlayer = () => {
 
 
     return (
-        isAudioPlayerVisible && (
+        (
             <div className="fixed bottom-1  w-full h-20   p-4 flex justify-center">
                 <div className='bg-gradient-to-r from-slate-900 to-slate-700 bg-opacity-90 text-white w-3/4 flex justify-between items-center rounded-2xl'>
 
@@ -154,7 +154,7 @@ const AudioPlayer = () => {
                                 onChange={handleSeek}
                                 className='w-full'
                             />
-                            <span style={{ marginLeft: 5 }}>{formatTime(duration)}</span>
+                            <span style={{ marginLeft: 5 }}>{formatTime(currentSong.duration)}</span>
 
                         </div>
                     </div>

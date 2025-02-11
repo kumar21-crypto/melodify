@@ -36,15 +36,14 @@ function AlbumDetail() {
 
     // Show the audio player when on the AlbumDetail page
     setIsAudioPlayerVisible(true);
-    
 
     // Hide the audio player when navigating away from the AlbumDetail page
     return () => {
-      setIsAudioPlayerVisible(false);
+        setIsAudioPlayerVisible(false);
     };
 
 
-  }, [album, setPlaylist, setIsAudioPlayerVisible]);
+  }, [album, setPlaylist, setIsAudioPlayerVisible, isPlaying]);
 
   const handleSongImageClick = (song) => {
 

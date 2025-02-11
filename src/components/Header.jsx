@@ -7,6 +7,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import { SearchContext } from './SearchContext';
 import profile from '../assets/profile.svg';
 import { AudioContext } from '../player/AudioContext';
+import Signup from '../firebase/Signup';
+import Login from '../firebase/Login';
 
 function Header() {
 
@@ -23,11 +25,15 @@ function Header() {
     navigate('/search');
   };
 
+  const toggleAudioPlayerVisibility = () => {
+    setIsAudioPlayerVisible((prev) => !prev);
+  };
+
 
   return (
     // bg-[#0b0e16]
     <>
-      <div className="fixed top-0 left-0 w-full bg-amber-300  text-white z-50">
+      <div className="fixed top-0 left-0 w-full bg-[#0b0e16]  text-white z-50">
         <div style={{ padding: 5 }} className='w-full h-full  flex justify-center  '>
 
           <div className='w-1/6 h-10 flex items-center justify-center text-lg font-sans'>
@@ -36,8 +42,8 @@ function Header() {
 
           <div className='w-3/6 h-10 flex  items-center justify-center'>
             <div className='flex justify-center items-center  w-full'>
-              <div style={{ marginRight: 10 }} className='mr-5 cursor-pointer'>New releases</div>
-              <div style={{ marginLeft: 10 }} className='ml-5 cursor-pointer'>Live podcasts</div>
+              <div style={{ marginRight: 10 }} onClick={()=>{navigate('/signup')}} className='mr-5 cursor-pointer'>signup</div>
+              <div style={{ marginLeft: 10 }} onClick={()=>{navigate('/login')}} className='ml-5 cursor-pointer'>login</div>
             </div>
 
             <div className='relative w-130'>
@@ -68,14 +74,11 @@ function Header() {
               </div>
             </div>
 
-            {isPlaying && (
-              <button
-                onClick={() => setIsAudioPlayerVisible(!isAudioPlayerVisible)}
-                className="text-white bg-blue-500 p-2 w-20 h-10"
-              >
+            <div className='w-1/6 h-10 flex items-center justify-center'>
+              <button onClick={toggleAudioPlayerVisibility}>
                 {isAudioPlayerVisible ? 'Hide Player' : 'Show Player'}
               </button>
-            )}
+            </div>
 
           </div>
           <div>

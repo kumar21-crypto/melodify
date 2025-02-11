@@ -20,6 +20,17 @@ import SearchResults from './pages/SearchResuls';
 import './App.css';
 import './index.css';
 
+import Login from './firebase/Login';
+import Signup from './firebase/Signup';
+import { AuthProvider, useAuth } from './firebase/AuthenticationContext';
+import { ToastContainer } from 'react-toastify';
+
+
+const PrivateRoute = ({ children }) => {
+  const { currentUser } = useAuth();
+  return currentUser ? children : <Navigate to="/login" />;
+};
+
 
 function App() {
   return (
@@ -27,6 +38,7 @@ function App() {
       <AudioProvider>
         <SearchProvider>
         <Router>
+          <AuthProvider>
           <Header />
           <div style={{marginTop:50}} className="pt-20"> 
           <Routes>
@@ -39,9 +51,13 @@ function App() {
             <Route path="albumdetail" element={<AlbumDetail />} />
             <Route path="search" element={<SearchResults />} />
             <Route path="allcategory" element={<AllCategory />} />
+            <Route path="login" element={<Login />} />
+          <Route path="signup" element={<Signup />} />
             </Route>
           </Routes>
+          <ToastContainer />
           </div>
+          </AuthProvider>
           <AudioPlayer />
         </Router>
         </SearchProvider>
