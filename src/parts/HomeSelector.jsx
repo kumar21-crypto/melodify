@@ -5,6 +5,7 @@ import { Chip, Stack } from '@mui/material';
 import AllCategory from '../homecategory/AllCategory'; // Import the AllCategory c
 import { Context } from '../components/ContextApi';
 import { fetchPlaylistByID } from '../components/Api';
+import { useNavigate } from 'react-router';
 
 const HomeSelector = () => {
 
@@ -16,6 +17,7 @@ const HomeSelector = () => {
 
   const devotionalCategory = homeData?.['promo:vx:data:107'];
   const [devotionalCategoryData, setDevotionalCategoryData] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -91,7 +93,14 @@ const HomeSelector = () => {
           {
             devotionalCategory?.map((album, index) => (
               <div style={{}} className='flex flex-col justify-center items-center w-30 h-30' key={index}>
-                <img src={album.image} alt="image" className='w-20 h-20 rounded-lg' />
+                <img 
+                src={album.image} 
+                alt="image" 
+                className='w-20 h-20 rounded-lg'
+                onClick={()=>{
+
+                }}
+                 />
                 <h2 style={{
                   fontSize: 15, maxLines: 1, maxWidth: 180,
                   textOverflow: 'ellipsis',

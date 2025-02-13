@@ -19,6 +19,7 @@ const Login = () => {
       toast.success("login success",{
         position:'top-center'
       });
+      navigate('/profile');
       
     } catch (error) {
       console.error('Failed to log in', error);
@@ -41,7 +42,7 @@ const Login = () => {
             <input type="password" style={{padding:10}} className='border border-2px-solid-white rounded-2xl' onChange={(e) => setPassword(e.target.value)} placeholder="Password" required />
             <button onClick={handleSubmit} type="submit" style={{padding:10}} className='w-2/5 border bg-blue-900 cursor-pointer border-2px-solid-white rounded-2xl flex justify-center items-center'>Login</button>
           </div>
-          <div style={{marginTop:10}} className='text-white flex'>Not have an account ?  <p style={{marginLeft:8}} onClick={()=>{navigate('login')}} className='text-blue-500 cursor-pointer'> Signup here</p></div>
+          <div style={{marginTop:10}} className='text-white flex'>Not have an account ?  <p style={{marginLeft:8}} onClick={()=>{navigate('/signup')}} className='text-blue-500 cursor-pointer'> Signup here</p></div>
         </div>
       </div>
 

@@ -9,6 +9,8 @@ import profile from '../assets/profile.svg';
 import { AudioContext } from '../player/AudioContext';
 import Signup from '../firebase/Signup';
 import Login from '../firebase/Login';
+import Profile from '../pages/Profile';
+import { useUser } from '../firebase/UserContext';
 
 function Header() {
 
@@ -16,6 +18,8 @@ function Header() {
   } = useContext(SearchContext);
 
   const { isPlaying, isAudioPlayerVisible, setIsAudioPlayerVisible } = useContext(AudioContext);
+
+  const { userData } = useUser();
 
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
@@ -97,11 +101,13 @@ function Header() {
             <Switch
 
             />
-            <div className=''>Dark Mode</div>
+            <div className=''>{userData?.Name}</div>
           </div>
 
           <div className='w-1/6 h-10 flex items-center justify-center'>
-            <img src={profile} alt="profile" className='w-8 h-8' />
+            <img src={profile} alt="profile" className='w-8 h-8' onClick={()=>{
+              navigate('/profile')
+            }} />
           </div>
         </div >
       </div>

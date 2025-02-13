@@ -3,12 +3,17 @@ import { useLocation } from 'react-router';
 import { fetchAlbumDetailData } from '../components/Api';
 import { AudioContext } from '../player/AudioContext';
 
-import { GoHeart } from "react-icons/go";
+import { GoHeart, GoHeartFill } from "react-icons/go";
 import { PiShareFat } from "react-icons/pi";
 import { RxDownload } from "react-icons/rx";
 import { FaPlay, FaPause } from "react-icons/fa";
 import { IoIosRadio } from "react-icons/io";
 import { MdOutlinePlaylistAdd } from "react-icons/md";
+
+import { UserContext, useUser } from '../firebase/UserContext';
+import { doc, getDoc, getDocs, setDoc, collection } from 'firebase/firestore';
+import { db, auth } from '../firebase/firebase';
+import { toast } from 'react-toastify';
 
 
 
@@ -18,14 +23,19 @@ function AlbumDetail() {
   const { data: album } = location.state || {};
   const [albumDetails, setAlbumDetails] = useState(null);
   // const [audioPlay, setAudioPlay] = useState(false);
-  const { currentSong, isPlaying, setCurrentSong, setIsPlaying, setPlaylist,isAudioPlayerVisible, setIsAudioPlayerVisible } = useContext(AudioContext);
+  const { currentSong, isPlaying, setCurrentSong, setIsPlaying, setPlaylist, isAudioPlayerVisible, setIsAudioPlayerVisible } = useContext(AudioContext);
+  const { userData } = useUser();
+  const [likedSongs, setLikedSongs] = useState([]);
+
 
   useEffect(() => {
 
     if (album?.perma_url) {
+
       fetchAlbumDetailData(album.perma_url)
         .then((data) => {
           setAlbumDetails(data);
+          fetchLikedSongs();
           console.log(data);
           setPlaylist(data.data.songs);
         })
@@ -33,17 +43,7 @@ function AlbumDetail() {
           console.error('Error fetching album details:', error);
         });
     }
-
-    // Show the audio player when on the AlbumDetail page
-    setIsAudioPlayerVisible(true);
-
-    // Hide the audio player when navigating away from the AlbumDetail page
-    return () => {
-        setIsAudioPlayerVisible(false);
-    };
-
-
-  }, [album, setPlaylist, setIsAudioPlayerVisible, isPlaying]);
+  }, [album, setPlaylist, setIsAudioPlayerVisible, isPlaying,db,likedSongs]);
 
   const handleSongImageClick = (song) => {
 
@@ -57,19 +57,60 @@ function AlbumDetail() {
 
   };
 
+  const handleLikedSong = async (song) => {
+    console.log("currentuser : ", auth.currentUser?.uid);
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        console.log("user not logged in");
+        return;
+      }
+      console.log(userData);
+      const songRef = doc(db, 'Users', user.uid, 'LikedSongs', song.id);
+
+      try {
+
+        const songDoc = await getDoc(songRef);
+        if (songDoc.exists()) {
+          console.log("song already liked")
+          toast.success("already liked");
+
+        } else {
+          await setDoc(songRef, song);
+          setLikedSongs([...likedSongs, song.id]);
+          console.log('Song saved successfully');
+          toast.success("song saved successfully");
+        }
+
+      } catch (error) {
+        console.error('Error saving song:', error);
+        toast.error("error saving song");
+      }
+
+    })
+  }
+
+  const fetchLikedSongs = async () => {
+    const user = auth.currentUser;
+    if (user) {
+      const likedSongsRef = collection(db, 'Users', user.uid, 'LikedSongs');
+      const likedSongsSnapshot = await getDocs(likedSongsRef);
+      const likedSongsList = likedSongsSnapshot.docs.map(doc => doc.id);
+      setLikedSongs(likedSongsList);
+    }
+  };
+
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
     return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   };
 
-
-
   if (!album) {
     return <div className="p-4">No album data available.</div>;
   }
 
   return (
+
 
     <div className='w-full h-auto flex'>
 
@@ -108,8 +149,9 @@ function AlbumDetail() {
             albumDetails?.data?.songs?.map((song, index) => (
 
               <div style={{ marginTop: 10 }} className='flex w-full items-center h-25 bg-[#141518] rounded-xl' key={index}>
-
                 {/* song image */}
+
+
                 <div style={{ padding: 4 }} className='w-1/7 h-22 flex justify-center items-center'>
                   <img src={song?.image[1]?.url} alt="image"
                     className='w-22 h-22 rounded-xl cursor-pointer'
@@ -141,7 +183,12 @@ function AlbumDetail() {
 
                 {/* song icons */}
                 <div className='w-2/7 h-full flex justify-around items-center'>
-                  <GoHeart color='white' size={22} />
+                {
+                  likedSongs.includes(song.id) 
+                  ? <GoHeartFill color='red' size={22} onClick={()=>{handleLikedSong(song)}} /> 
+                  : <GoHeart color='white' size={22} onClick={()=>{handleLikedSong(song)}} />
+                }
+                 
                   <PiShareFat color='white' size={22} />
                   <RxDownload color='white' size={22} />
                   {currentSong?.id === song.id && isPlaying ? (
@@ -168,7 +215,7 @@ function AlbumDetail() {
             albumDetails?.data?.artists?.all?.map((artist, index) => (
 
               <div style={{}} className='flex flex-col  justify-center items-center w-50 h-50' key={index}>
-                <img src={artist.image[1].url} alt="image" className='w-35 h-35 rounded-full' />
+                <img src={artist?.image[1]?.url} alt="image" className='w-35 h-35 rounded-full' />
                 <h2 style={{
                   fontSize: 18, maxLines: 1, maxWidth: 180,
                   textOverflow: 'ellipsis',
@@ -185,100 +232,6 @@ function AlbumDetail() {
 
 
     </div>
-
-    // <div className="p-4 h-auto w-full text-white">
-    //   <div className="p-4 h-auto w-full">
-    //     <div className='flex'>
-    //       {/* left work */}
-    //       <div className='flex w-3/5'>
-
-    //         <div className='flex flex-col justify-center items-center w-50  rounded-lg   shadow-md'>
-    //           <div> <h2 style={{
-    //             fontSize: 15, maxLines: 1, maxWidth: 130,
-    //             textOverflow: 'ellipsis',
-    //             whiteSpace: 'nowrap',
-    //             overflow: 'hidden',
-    //             marginTop: 5,
-    //             marginBottom: 5,
-    //             color: 'white'
-    //           }} className="text-xl font-bold">{album.title}</h2></div>
-    //           <div><img src={album.image} alt="album image" className='w-40 h-40 rounded-2xl' /></div>
-    //         </div>
-
-    //         {/* middle work */}
-    //         <div style={{ padding: 5, marginTop: 10, marginLeft: 10 }} className='flex flex-col w-100  h-auto'>
-
-    //           <div>{albumDetails?.data?.description || 'loading description ....'}</div>
-    //           <div>{albumDetails?.data?.songCount} songs</div>
-    //           <div>{albumDetails?.data?.year}</div>
-
-    //         </div>
-    //       </div>
-
-
-    //       {/* rigth work */}
-    //       <div className='w-2/5 h-auto'>
-
-    //         {/* artist work  */}
-
-    //         {albumDetails?.data?.artists?.all?.map((artist, index) => (
-
-    //           <div key={index} style={{ margin: 5 }} className=" items-center flex">
-
-    //             <div><img src={artist?.image[1]?.url} alt="artsit" className='w-16 h-16 rounded-2xl' /></div>
-    //             <div style={{ marginLeft: '20px' }} className='font-sans text-sm font-bold' >{artist?.name}</div>
-
-    //           </div>
-    //         ))}
-
-
-
-    //       </div>
-
-    //     </div>
-    //   </div>
-
-    //   {/* song work */}
-
-    //   <div className='w-full text-white'>
-    //     <h1>Songs</h1>
-
-    //     {albumDetails?.data?.songs?.map((song, index) => (
-
-    //       <div key={index} style={{ marginTop:10 }} className='bg-[#1d212a] h-20 flex  w-4/5 '>
-    //         <div className='flex w-3/5'><img src={song?.image[1]?.url} alt="song image" className='w-16 h-16 rounded-2xl'
-    //           onClick={() =>{
-    //              handleSongImageClick(song);
-    //              console.log(song);
-    //           }
-
-    //             }
-
-    //             />
-
-    //             <div style={{marginLeft:10}} className="ml-4">
-    //               <div className="text-lg font-bold">{song?.name}</div>
-    //               <div className="text-sm text-gray-600">{song?.year} {song?.type}</div>
-
-    //             </div>
-    //         </div>
-
-
-    //         {/* songs icon work */}
-    //         <div style={{paddingLeft:5, paddingRight:5}} className=' w-1/5 h-auto flex justify-between items-center '>
-    //         <div><FavoriteBorderRoundedIcon/></div>
-    //         <div><IosShareRoundedIcon /></div>
-    //         <div><PlaylistAddRoundedIcon/></div>
-    //         <div><MoreVertRoundedIcon /></div>
-    //         </div>
-    //       </div>
-
-
-    //     ))}
-
-
-    //   </div>
-    // </div>
 
 
   );

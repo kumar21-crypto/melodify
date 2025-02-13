@@ -33,11 +33,9 @@ const AudioPlayer = () => {
         const updateCurrentTime = () => {
             setCurrentTime(audioRef.current.currentTime);
         };
-
         const updateDuration = () => {
             setDuration(audioRef.current.duration);
         };
-
         const handleSongEnd = () => {
             handleNext();
         };
@@ -47,8 +45,6 @@ const AudioPlayer = () => {
             audioRef.current.addEventListener('loadedmetadata', updateDuration);
             audioRef.current.addEventListener('ended', handleSongEnd);
         }
-
-
 
         return () => {
             if (audioRef.current) {
@@ -60,6 +56,16 @@ const AudioPlayer = () => {
         };
 
     }, [audioRef.current]);
+
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.load();
+            if (isPlaying) {
+                audioRef.current.play();
+            }
+        }
+    }, [currentSong, isPlaying]);
 
     const handlePlayPause = () => {
         setIsPlaying(!isPlaying);

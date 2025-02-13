@@ -4,10 +4,12 @@ import { Context } from '../components/ContextApi';
 import Slider from 'react-slick';
 import { CiPlay1 } from "react-icons/ci";
 import HomeSelector from '../parts/HomeSelector';
+import { useNavigate } from 'react-router';
 
 
 function Home() {
   const { homeData } = useContext(Context);
+  const navigate = useNavigate();
 
   console.log(homeData);
 
@@ -33,7 +35,11 @@ function Home() {
 
               <div key={index} className="p-2 relative ">
                 <div className="p-4 rounded-lg flex flex-col justify-center items-center">
-                  <img src={item.image} alt={item.title} className="hover:-translate-y-1 
+                  <img src={item.image} alt={item.title} 
+                  onClick={()=>{
+                    navigate('/albumdetail',{ state: { data: item } })
+                  }}
+                  className="hover:-translate-y-1 
                   hover:scale-110 duration-500 hover:opacity-80 backdrop-blur-sm w-70 h-70 object-cover cursor-pointer rounded-lg mb-2" />
                   <h3 style={{
                     fontSize: 15, maxLines: 1, maxWidth: 180,
