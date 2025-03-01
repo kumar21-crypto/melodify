@@ -9,7 +9,7 @@ import AlbumDetail from './parts/AlbumDetail';
 import HomeSlider from './parts/HomeSlider';
 import AllCategory from './homecategory/AllCategory';
 import Profile from './pages/Profile';
-
+import ArtistsDetail from './parts/ArtistsDetail';
 
 import Layout from './components/Layout';
 import Header from './components/Header';
@@ -47,16 +47,17 @@ function App() {
                   <Routes>
                     <Route path="/" element={<Layout />} >
                       <Route index element={<Home />} />
-                      <Route path="browse" element={<Browse />} />
-                      <Route path="albums" element={<Albums />} />
-                      <Route path="artists" element={<Artists />} />
-                      <Route path="trending" element={<Trending />} />
-                      <Route path="albumdetail" element={<AlbumDetail />} />
+                      <Route path="/browse" element={<Browse />} />
+                      <Route path="/albums" element={<Albums />} />
+                      <Route path="/artists" element={<Artists />} />
+                      <Route path="/trending" element={<Trending />} />
+                      <Route path="/albumdetail" element={<AlbumDetail />} />
                       <Route path="/search" element={<SearchResults />} />
                       <Route path="/allcategory" element={<AllCategory />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/signup" element={<Signup />} />
                       <Route path="/profile" element={<Profile />} />
+                      <Route path="/artistsdetail" element={<ArtistsDetail />} />
                     </Route>
                   </Routes>
 

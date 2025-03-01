@@ -6,6 +6,7 @@ import AllCategory from '../homecategory/AllCategory'; // Import the AllCategory
 import { Context } from '../components/ContextApi';
 import { fetchPlaylistByID } from '../components/Api';
 import { useNavigate } from 'react-router';
+import Artists from '../pages/Artists';
 
 const HomeSelector = () => {
 
@@ -147,11 +148,11 @@ const HomeSelector = () => {
               backgroundColor: selectedCategory === 'Devotional' ? '#21897f' : 'transparent'
             }} />
 
-          <Chip onClick={() => handleClick('Party')} label="Party"
+          <Chip onClick={() => handleClick('Artist')} label="Artist"
             sx={{
               color: 'white', borderColor: 'white',
-              border: selectedCategory === 'Party' ? 'none' : '1px solid white',
-              backgroundColor: selectedCategory === 'Party' ? '#21897f' : 'transparent'
+              border: selectedCategory === 'Artist' ? 'none' : '1px solid white',
+              backgroundColor: selectedCategory === 'Artist' ? '#21897f' : 'transparent'
             }} />
 
           <Chip onClick={() => handleClick('Chill')} label="Chill"
@@ -188,7 +189,7 @@ const HomeSelector = () => {
       <main className='w-full h-auto'>
         {selectedCategory === 'New' && allCategoryContainer()}
         {selectedCategory === 'Devotional' && DevotionalCategoryContainer()}
-        {selectedCategory === 'Party' && <div>Artists Content</div>}
+        {selectedCategory === 'Artist' && <Artists/>}
         {selectedCategory === 'Chill' && <div>Albums Content</div>}
         {selectedCategory === 'Genres' && <div>Genres Content</div>}
         {selectedCategory === 'Moods' && <div>Moods Content</div>}

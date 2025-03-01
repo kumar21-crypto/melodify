@@ -36,13 +36,13 @@ function Layout() {
                         <div  style={{marginLeft:5}} className='font-sans font-semibold  text-md'>Browse</div>
                     </div>
                 </NavLink>
-                <NavLink to="/artists" className="mb-2 p-2 w-full flex justify-center items-center h-13 rounded hover:bg-gray-700" activeclassname="bg-gray-700">
+                <NavLink to="/trending" className="mb-2 p-2 w-full flex justify-center items-center h-13 rounded hover:bg-gray-700" activeclassname="bg-gray-700">
                     <div style={{marginTop:15}} className=' flex justify-center items-center w-2/3 h-13'>
                         <div style={{marginRight:5}} className='p-10'><BiTrendingUp size={25} /></div>
                         <div  style={{marginLeft:5}} className='font-sans font-semibold  text-md'>Trending</div>
                     </div>
                 </NavLink>
-                <NavLink to="/trending" className="mb-2 p-2 w-full flex justify-center items-center h-13 rounded hover:bg-gray-700" activeclassname="bg-gray-700">
+                <NavLink to="/artists" className="mb-2 p-2 w-full flex justify-center items-center h-13 rounded hover:bg-gray-700" activeclassname="bg-gray-700">
                     <div style={{marginTop:15}} className=' flex justify-center items-center w-2/3 h-13'>
                         <div style={{marginRight:5}} className='p-10'><IoPeopleOutline size={25} /></div>
                         <div  style={{marginLeft:5}} className='font-sans font-semibold  text-md'>Artists</div>

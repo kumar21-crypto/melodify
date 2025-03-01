@@ -14,7 +14,7 @@ import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded';
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded';
 import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded';
 import VolumeDownRoundedIcon from '@mui/icons-material/VolumeDownRounded';
-
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 const AudioPlayer = () => {
 
@@ -26,7 +26,6 @@ const AudioPlayer = () => {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [volume, setVolume] = useState(1);
-
 
     useEffect(() => {
 
@@ -65,7 +64,17 @@ const AudioPlayer = () => {
                 audioRef.current.play();
             }
         }
-    }, [currentSong, isPlaying]);
+    }, [currentSong]);
+
+    useEffect(() => {
+        if (audioRef.current) {
+            if (isPlaying) {
+                audioRef.current.play();
+            } else {
+                audioRef.current.pause();
+            }
+        }
+    }, [isPlaying]);
 
     const handlePlayPause = () => {
         setIsPlaying(!isPlaying);
@@ -112,7 +121,18 @@ const AudioPlayer = () => {
 
                     {/* player image */}
                     <div className='w-1/4 h-full flex justify-between items-center'>
-                        <div style={{ margin: 5 }} className='flex justify-self-center w-1/4'><img src={currentSong.image[1].url} alt="song image" className="w-16 h-16 rounded-lg" /></div>
+                        <div className='w-15 h-8 absolute'>
+                            {isPlaying ?
+                                <DotLottieReact
+                                    src='https://lottie.host/b66f89ed-402c-4177-8ec4-ae4daab39fa0/rwFnrlLZUi.lottie'
+                                    loop autoplay
+
+                                /> : ''
+                            }
+                        </div>
+                        <div style={{ margin: 5 }} className='flex justify-self-center w-1/4'>
+
+                            <img src={currentSong.image[1].url} alt="song image" className="w-16 h-16 rounded-lg" /></div>
                         <div style={{ margin: 5 }} className='flex flex-col justify-self-center w-3/4'>
                             <div className='font-bold'>{currentSong.name}</div>
                             <div className='flex flex-col'>
@@ -185,6 +205,7 @@ const AudioPlayer = () => {
 
                 </div>
                 <audio ref={audioRef} src={currentSong?.downloadUrl[3]?.url} />
+
             </div>
         )
     );

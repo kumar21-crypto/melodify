@@ -1,9 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import Switch from '@mui/material/Switch';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
 import { SearchContext } from './SearchContext';
 import profile from '../assets/profile.svg';
 import { AudioContext } from '../player/AudioContext';
@@ -16,11 +13,8 @@ function Header() {
 
   const { searchResults, setSearchResults, search, handleSearchQuery
   } = useContext(SearchContext);
-
   const { isPlaying, isAudioPlayerVisible, setIsAudioPlayerVisible } = useContext(AudioContext);
-
   const { userData } = useUser();
-
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 
@@ -78,23 +72,8 @@ function Header() {
               </div>
             </div>
 
-            <div className='w-1/6 h-10 flex items-center justify-center'>
-              <button onClick={toggleAudioPlayerVisibility}>
-                {isAudioPlayerVisible ? 'Hide Player' : 'Show Player'}
-              </button>
-            </div>
-
           </div>
           <div>
-
-            {/* <div style={{ marginLeft: 5, padding: 5 }}
-              onClick={() => {
-                handleSearch();
-              }}
-              className='bg-gray-100 cursor-pointer rounded-sm'>
-              <SearchIcon />
-            </div> */}
-
           </div>
 
           <div className='w-1/6 h-10 flex items-center justify-center'>
@@ -105,7 +84,7 @@ function Header() {
           </div>
 
           <div className='w-1/6 h-10 flex items-center justify-center'>
-            <img src={profile} alt="profile" className='w-8 h-8' onClick={()=>{
+            <img src={profile} alt="profile" className='w-8 h-8 cursor-pointer' onClick={()=>{
               navigate('/profile')
             }} />
           </div>

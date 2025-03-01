@@ -5,7 +5,10 @@ import Slider from 'react-slick';
 import { CiPlay1 } from "react-icons/ci";
 import HomeSelector from '../parts/HomeSelector';
 import { useNavigate } from 'react-router';
-
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Browse from './Browse';
+import Artists from './Artists';
 
 function Home() {
   const { homeData } = useContext(Context);
@@ -60,9 +63,13 @@ function Home() {
 
       {/* home selector */}
       <HomeSelector />
-
       {/* trending */}
       <Trending />
+      {/* browse page */}
+      <Browse />
+      {/* top artist */}
+      <Artists />
+
     </div>
   );
 }
